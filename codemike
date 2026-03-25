@@ -1,0 +1,93 @@
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+
+// 🔥 PANEL EDITABLE (SOLO EDITA AQUÍ CADA SEMANA)
+const scheduleData = [
+  {
+    day: "Lunes",
+    slots: [
+      {
+        time: "6:00 PM",
+        classes: [
+          { level: "Básico", teacher: "Ana" },
+          { level: "Intermedio", teacher: "Luis" },
+          { level: "Avanzado", teacher: "Carla" }
+        ]
+      },
+      {
+        time: "7:00 PM",
+        classes: [
+          { level: "Básico", teacher: "Diego" },
+          { level: "Intermedio", teacher: "Sofía" }
+        ]
+      }
+    ]
+  }
+];
+
+// 🎨 CONFIG VISUAL AUTOMÁTICA
+const levelStyles = {
+  "Básico": "from-green-400 to-emerald-600",
+  "Intermedio": "from-blue-400 to-indigo-600",
+  "Avanzado": "from-rose-400 to-red-700",
+  "Extra": "from-purple-400 to-fuchsia-600"
+};
+
+export default function App() {
+  const [selectedDay, setSelectedDay] = useState(scheduleData[0].day);
+  const phone = "51999999999";
+
+  const currentDay = scheduleData.find(d => d.day === selectedDay);
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white p-6">
+
+      {/* Header */}
+      <div className="text-center mb-10">
+        <h1 className="text-4xl font-extrabold">🎬 Soy Nano Academy</h1>
+        <p className="text-gray-400">Reserva en menos de 10 segundos</p>
+      </div>
+
+      {/* Selector de días */}
+      <div className="flex gap-3 mb-8 overflow-x-auto">
+        {scheduleData.map((d) => (
+          <button
+            key={d.day}
+            onClick={() => setSelectedDay(d.day)}
+            className={`px-4 py-2 rounded-full ${selectedDay === d.day ? "bg-white text-black" : "bg-gray-800"}`}
+          >
+            {d.day}
+          </button>
+        ))}
+      </div>
+
+      {/* Horarios */}
+      {currentDay?.slots.map((slot, i) => (
+        <div key={i} className="mb-10">
+          <h2 className="text-2xl mb-4">🕒 {slot.time}</h2>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {slot.classes.map((cls, j) => (
+              <motion.div
+                key={j}
+                whileHover={{ scale: 1.05 }}
+                className={`p-5 rounded-2xl bg-gradient-to-br ${levelStyles[cls.level] || "from-gray-500 to-gray-700"}`}
+              >
+                <h3 className="text-xl font-bold">{cls.level}</h3>
+                <p>👨‍🏫 {cls.teacher}</p>
+
+                <a
+                  href={`https://wa.me/${phone}?text=${encodeURIComponent(`Hola, quiero reservar ${cls.level} ${selectedDay} ${slot.time} con ${cls.teacher}`)}`}
+                  className="block mt-4 bg-white text-black text-center py-2 rounded-xl font-semibold"
+                >
+                  📲 Reservar
+                </a>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      ))}
+
+    </div>
+  );
+}
